@@ -1,5 +1,5 @@
 # Використовуємо офіційний образ .NET SDK як базовий
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
 
 # Встановлюємо необхідні інструменти для побудови проекту
 RUN apt-get update && \
@@ -30,7 +30,7 @@ COPY . ./
 RUN dotnet publish -c Release -o out
 
 # Використовуємо офіційний .NET runtime як кінцевий образ
-FROM mcr.microsoft.com/dotnet/aspnet:7.0
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build-env /app/out .
 

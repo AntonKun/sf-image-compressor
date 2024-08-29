@@ -1,11 +1,9 @@
 using System;
 using System.IO;
-using System.Drawing; // Для System.Drawing.Common
-using System.Drawing.Imaging; // Для System.Drawing.Common
-using SixLabors.ImageSharp; // ImageSharp.Image
+using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Formats.Jpeg;
-using ImageMagick; // Magick.NET.Image
+using ImageMagick;
 using Aspose.Imaging;
 using Aspose.Imaging.ImageOptions;
 
@@ -62,30 +60,5 @@ class Program
             var options = new JpegOptions { Quality = quality };
             image.Save(outputPath, options);
         }
-    }
-
-    static void CompressImageWithSystemDrawing(string inputPath, string outputPath, long quality)
-    {
-        using (var image = Image.FromFile(inputPath))
-        {
-            var encoder = GetEncoder(ImageFormat.Jpeg);
-            var encoderParameters = new EncoderParameters(1);
-            encoderParameters.Param[0] = new EncoderParameter(Encoder.Quality, quality);
-
-            image.Save(outputPath, encoder, encoderParameters);
-        }
-    }
-
-    private static ImageCodecInfo GetEncoder(ImageFormat format)
-    {
-        var codecs = ImageCodecInfo.GetImageDecoders();
-        foreach (var codec in codecs)
-        {
-            if (codec.FormatID == format.Guid)
-            {
-                return codec;
-            }
-        }
-        return null;
     }
 }
