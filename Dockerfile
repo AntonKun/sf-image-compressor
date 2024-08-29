@@ -8,6 +8,7 @@ RUN apt-get update && \
         libc6-dev \
         libgdiplus \
         libx11-dev \
+        libglib2.0-0 \
         libfontconfig1 \
         && rm -rf /var/lib/apt/lists/*
 
@@ -20,7 +21,8 @@ RUN dotnet restore
 
 # Встановлення необхідних бібліотек через NuGet
 RUN dotnet add package SixLabors.ImageSharp --version 3.0.0
-RUN dotnet add package SkiaSharp --version 2.88.3
+RUN dotnet add package Magick.NET-Q8-AnyCPU
+RUN dotnet add package Aspose.Imaging --version 23.8.0
 # Для платних бібліотек потрібні окремі ліцензії та залежності, їх необхідно додати у проект вручну.
 
 # Копіюємо всі файли проекту та збираємо додаток
@@ -31,6 +33,9 @@ RUN dotnet publish -c Release -o out
 FROM mcr.microsoft.com/dotnet/aspnet:7.0
 WORKDIR /app
 COPY --from=build-env /app/out .
+
+# Копіюємо необхідні нативні бібліотеки
+COPY --from=build-env /root/.nuget/packages/ /root/.nuget/packages/
 
 # Вказуємо команду запуску контейнера
 ENTRYPOINT ["dotnet", "MyApp.dll"]
